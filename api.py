@@ -3,7 +3,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from parsing import main
+from parsing import run_parser as rp
 
 app = FastAPI()
 origins = [
@@ -20,7 +20,7 @@ app.add_middleware(
 
 
 def read_csv(file: str) -> list[list[str, str, str, str]]:
-    df = pd.read_csv(file, header=None)
+    df = pd.read_csv(file, header=None, encoding="CP1251")
     return df.values.tolist()
 
 
@@ -43,12 +43,12 @@ def get_all_news() -> list[dict]:
 
 @app.get("/api/v1/runParser")
 def run_parser() -> dict:
-    response = {"status": ""}
+    response = {"status": ""
+                }
     try:
-        main()
+        rp()
         response["status"] = 'success'
     except Exception as e:
-        ...
         response["status"] = 'failed'
         response["message"] = 'Что-то пошло не так'
 
